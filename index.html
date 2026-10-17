@@ -312,7 +312,7 @@
             <div id="screen-login" class="screen active">
                 <div class="logo-icon">🎬</div>
                 <h1>Movie Time</h1>
-                <p class="subtitle">התחברות לחוויית צפייה קולנועית</p>
+                <p class="subtitle">התחברות אמיתית באמצעות Firebase</p>
 
                 <button onclick="handleGoogleAuth()" class="btn-google">
                     <svg viewBox="0 0 24 24">
@@ -328,12 +328,12 @@
 
                 <form onsubmit="handleEmailLogin(event)">
                     <div class="form-group">
-                        <input type="email" id="login-email" class="custom-input" placeholder="כתובת אימייל" required value="user@movietime.com">
+                        <input type="email" id="login-email" class="custom-input" placeholder="כתובת אימייל" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" id="login-password" class="custom-input" placeholder="סיסמה" required value="123456">
+                        <input type="password" id="login-password" class="custom-input" placeholder="סיסמה" required>
                     </div>
-                    <div id="login-error" class="error-msg">הפרטים שגויים, אנא נסה שוב.</div>
+                    <div id="login-error" class="error-msg"></div>
                     <button type="submit" class="btn-red">התחברות</button>
                 </form>
 
@@ -346,23 +346,11 @@
             <div id="screen-register" class="screen">
                 <div class="logo-icon">👤</div>
                 <h2>הרשמה ל-Movie Time</h2>
-                <p class="subtitle">צור חשבון חדש בחינם ובקלות</p>
-
-                <button onclick="handleGoogleAuth()" class="btn-google">
-                    <svg viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                    </svg>
-                    <span>הרשמה באמצעות Google</span>
-                </button>
-
-                <div class="divider"><span>או פרטים אישיים</span></div>
+                <p class="subtitle">צור חשבון חדש ב-Firebase</p>
 
                 <form onsubmit="handleRegisterSubmit(event)">
                     <div class="form-group">
-                        <input type="text" id="reg-name" class="custom-input" placeholder="שם מלא (4-15 תווים)" required>
+                        <input type="text" id="reg-name" class="custom-input" placeholder="שם מלא" required>
                     </div>
                     <div class="form-group">
                         <input type="email" id="reg-email" class="custom-input" placeholder="כתובת אימייל" required>
@@ -370,10 +358,8 @@
                     <div class="form-group">
                         <input type="password" id="reg-pass" class="custom-input" placeholder="סיסמה (לפחות 6 תווים)" required minlength="6">
                     </div>
-                    <div class="form-group">
-                        <input type="date" id="reg-dob" class="custom-input" style="color:#a0a0a5;" required>
-                    </div>
-                    <button type="submit" class="btn-red">הרשמה ובחירת מסלול</button>
+                    <div id="reg-error" class="error-msg"></div>
+                    <button type="submit" class="btn-red">הרשמה אמיתית</button>
                 </form>
 
                 <div class="switch-link">
@@ -422,11 +408,11 @@
             <div id="screen-dashboard" class="screen">
                 <div style="font-size:40px; margin-bottom:10px;">✅</div>
                 <h2>ברוך הבא ל-Movie Time!</h2>
-                <p class="subtitle">החשבון שלך פעיל. אתה מוכן להתחיל לצפות.</p>
+                <p class="subtitle">החשבון שלך מחובר ומאומת.</p>
 
                 <div style="background:rgba(255,255,255,0.05); padding:16px; border-radius:14px; text-align:right; margin-bottom:20px; font-size:13px; line-height:1.8;">
-                    <div><strong>משתמש:</strong> <span id="dash-user-name">Op</span></div>
-                    <div><strong>אימייל:</strong> <span id="dash-user-email">user@movietime.com</span></div>
+                    <div><strong>משתמש:</strong> <span id="dash-user-name">ממתין...</span></div>
+                    <div><strong>אימייל:</strong> <span id="dash-user-email">ממתין...</span></div>
                     <div><strong>מסלול:</strong> <span id="dash-plan-name" style="color:#f43f5e;">Free Trial</span></div>
                 </div>
 
@@ -436,9 +422,8 @@
         </div>
     </main>
 
-    <!-- App Logic & Firebase Initialization -->
+    <!-- Real Firebase Authentication Logic -->
     <script>
-        // Initialize Firebase
         const firebaseConfig = {
           apiKey: "AIzaSyCNoQaVIpyFuOOuGe6n31qiZ-E2SlD0kFg",
           authDomain: "movie-time-7f4ed.firebaseapp.com",
@@ -454,43 +439,65 @@
         const provider = new firebase.auth.GoogleAuthProvider();
 
         let activePlan = '6months';
-        let userDetails = { name: 'Op', email: 'user@movietime.com' };
+        let currentUserData = { name: '', email: '' };
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
+        // 1. Real Google Auth
         function handleGoogleAuth() {
             auth.signInWithPopup(provider).then((result) => {
                 const user = result.user;
-                userDetails.name = user.displayName || 'משתמש Google';
-                userDetails.email = user.email || 'user@gmail.com';
+                currentUserData.name = user.displayName || 'משתמש Google';
+                currentUserData.email = user.email;
                 showScreen('screen-plans');
             }).catch((error) => {
-                console.error("שגיאה בהתחברות Google:", error);
-                // Fallback לדמו מקומי במידה והדפדפן חוסם ב-file://
-                userDetails.name = 'משתמש Google';
-                userDetails.email = 'user@gmail.com';
-                showScreen('screen-plans');
+                alert("שגיאה בהתחברות Google: " + error.message);
             });
         }
 
+        // 2. Real Email Login
         function handleEmailLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
-            userDetails.name = email.split('@')[0];
-            userDetails.email = email;
-            showScreen('screen-plans');
+            const pass = document.getElementById('login-password').value.trim();
+            const errorEl = document.getElementById('login-error');
+
+            auth.signInWithEmailAndPassword(email, pass).then((userCredential) => {
+                const user = userCredential.user;
+                currentUserData.name = user.displayName || email.split('@')[0];
+                currentUserData.email = user.email;
+                errorEl.style.display = 'none';
+                showScreen('screen-plans');
+            }).catch((error) => {
+                errorEl.innerText = "שגיאה בהתחברות: " + error.message;
+                errorEl.style.display = 'block';
+            });
         }
 
+        // 3. Real Email Registration
         function handleRegisterSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
             const email = document.getElementById('reg-email').value.trim();
-            userDetails.name = name;
-            userDetails.email = email;
-            showScreen('screen-plans');
+            const pass = document.getElementById('reg-pass').value.trim();
+            const errorEl = document.getElementById('reg-error');
+
+            auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
+                const user = userCredential.user;
+                // Save display name
+                return user.updateProfile({ displayName: name }).then(() => {
+                    currentUserData.name = name;
+                    currentUserData.email = email;
+                    errorEl.style.display = 'none';
+                    showScreen('screen-plans');
+                });
+            }).catch((error) => {
+                errorEl.innerText = "שגיאה בהרשמה: " + error.message;
+                errorEl.style.display = 'block';
+            });
         }
 
         function selectPlan(planId) {
@@ -506,8 +513,8 @@
                 'freetrial': 'Free Trial (חודש 1 חינם)'
             };
 
-            document.getElementById('dash-user-name').innerText = userDetails.name;
-            document.getElementById('dash-user-email').innerText = userDetails.email;
+            document.getElementById('dash-user-name').innerText = currentUserData.name || 'משתמש רשום';
+            document.getElementById('dash-user-email').innerText = currentUserData.email || 'לא ידוע';
             document.getElementById('dash-plan-name').innerText = planTitles[activePlan];
 
             if (activePlan === 'freetrial') {
@@ -518,8 +525,9 @@
         }
 
         function logoutUser() {
-            auth.signOut().catch(() => {});
-            showScreen('screen-login');
+            auth.signOut().then(() => {
+                showScreen('screen-login');
+            });
         }
 
         // Particle Canvas Background
