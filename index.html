@@ -3,388 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Time - פלטפורמת סטרימינג מתקדמת</title>
+    <title>Movie Time - התחברות ומסלולים</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Heebo', sans-serif;
-        }
-
-        body, html {
-            width: 100%;
-            min-height: 100vh;
-            background-color: #08080a;
-            color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .glow-1 {
-            position: fixed;
-            width: 350px;
-            height: 350px;
-            background: rgba(225, 29, 72, 0.18);
-            border-radius: 50%;
-            filter: blur(120px);
-            top: -50px;
-            right: -50px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .glow-2 {
-            position: fixed;
-            width: 350px;
-            height: 350px;
-            background: rgba(30, 58, 138, 0.15);
-            border-radius: 50%;
-            filter: blur(120px);
-            bottom: -50px;
-            left: -50px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        main {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 500px;
-            padding: 16px;
-            margin: auto;
-        }
-
-        /* Glass Panels */
-        .glass-panel {
-            background: rgba(18, 18, 24, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 28px;
-            padding: 32px 24px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.95);
-            width: 100%;
-            text-align: center;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .dashboard-panel {
-            max-width: 850px !important;
-            text-align: right !important;
-            padding: 28px !important;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(225, 29, 72, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%);
-            border: 1px solid rgba(225, 29, 72, 0.4);
-            border-radius: 18px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            font-size: 26px;
-            box-shadow: 0 10px 25px rgba(225, 29, 72, 0.25);
-        }
-
-        h1, h2 {
-            font-size: 24px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #9ca3af;
-            margin-bottom: 22px;
-        }
-
-        /* Google Button */
-        .btn-google {
-            width: 100%;
-            padding: 13px 16px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 16px;
-        }
-
-        .btn-google:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .btn-google svg {
-            width: 20px !important;
-            height: 20px !important;
-            min-width: 20px;
-            min-height: 20px;
-            flex-shrink: 0;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 16px 0;
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .divider span {
-            padding: 0 10px;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-            text-align: right;
-        }
-
-        .custom-input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
-            padding: 13px 16px;
-            color: #ffffff;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .custom-input:focus {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: #e11d48;
-            box-shadow: 0 0 16px rgba(225, 29, 72, 0.3);
-        }
-
-        .btn-red {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
-            border: none;
-            border-radius: 14px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4);
-            margin-top: 6px;
-        }
-
-        .btn-red:hover {
-            box-shadow: 0 8px 25px rgba(225, 29, 72, 0.6);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            margin-top: 10px;
-        }
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .switch-link {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 13px;
-            color: #9ca3af;
-        }
-
-        .switch-link button {
-            background: none;
-            border: none;
-            color: #f43f5e;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-right: 4px;
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        .error-msg {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            font-size: 12px;
-            padding: 9px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            display: none;
-            text-align: right;
-        }
-
-        /* Enhanced Plans Screen */
-        .plans-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 14px;
-            margin-bottom: 20px;
-            text-align: right;
-        }
-
-        @media(min-width: 600px) {
-            .plans-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .plan-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 20px 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .plan-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .plan-card.selected {
-            background: linear-gradient(180deg, rgba(225, 29, 72, 0.12) 0%, rgba(18, 18, 24, 0.8) 100%);
-            border-color: #e11d48;
-            box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3);
-            transform: translateY(-4px);
-        }
-
-        .plan-badge {
-            position: absolute;
-            top: -11px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #e11d48, #9f1239);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 3px 12px;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.5);
-            letter-spacing: 0.5px;
-        }
-
-        .plan-features {
-            list-style: none;
-            margin: 14px 0;
-            font-size: 11.5px;
-            color: #9ca3af;
-            line-height: 1.7;
-            text-align: right;
-        }
-
-        .plan-features li {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Dashboard ("after.log") Professional Styling */
-        .dash-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 16px;
-            margin-bottom: 20px;
-        }
-
-        .user-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px 14px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        @media(min-width: 600px) {
-            .movies-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .movie-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 14px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .movie-card:hover {
-            transform: scale(1.03);
-            border-color: #e11d48;
-            background: rgba(255, 255, 255, 0.07);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; }
+        body, html { width: 100%; min-height: 100vh; background-color: #08080a; color: #f3f4f6; display: flex; justify-content: center; align-items: center; overflow-x: hidden; position: relative; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .glow-1 { position: fixed; width: 350px; height: 350px; background: rgba(225, 29, 72, 0.18); border-radius: 50%; filter: blur(120px); top: -50px; right: -50px; z-index: 2; pointer-events: none; }
+        .glow-2 { position: fixed; width: 350px; height: 350px; background: rgba(30, 58, 138, 0.15); border-radius: 50%; filter: blur(120px); bottom: -50px; left: -50px; z-index: 2; pointer-events: none; }
+        main { position: relative; z-index: 10; width: 100%; max-width: 500px; padding: 16px; margin: auto; }
+        .glass-panel { background: rgba(18, 18, 24, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 28px; padding: 32px 24px; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.95); width: 100%; text-align: center; }
+        .logo-icon { width: 60px; height: 60px; background: linear-gradient(135deg, rgba(225, 29, 72, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(225, 29, 72, 0.4); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 26px; }
+        h1, h2 { font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 4px; }
+        .subtitle { font-size: 13px; color: #9ca3af; margin-bottom: 22px; }
+        .btn-google { width: 100%; padding: 13px 16px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; color: #ffffff; font-size: 14px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 16px; }
+        .btn-google:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); }
+        .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .divider { display: flex; align-items: center; margin: 16px 0; color: #6b7280; font-size: 12px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .divider span { padding: 0 10px; }
+        .form-group { margin-bottom: 14px; text-align: right; }
+        .custom-input { width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 13px 16px; color: #ffffff; font-size: 14px; outline: none; }
+        .custom-input:focus { border-color: #e11d48; box-shadow: 0 0 16px rgba(225, 29, 72, 0.3); }
+        .btn-red { width: 100%; padding: 14px; background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); border: none; border-radius: 14px; color: #ffffff; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4); margin-top: 6px; }
+        .btn-red:hover { box-shadow: 0 8px 25px rgba(225, 29, 72, 0.6); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; margin-top: 10px; }
+        .switch-link { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 13px; color: #9ca3af; }
+        .switch-link button { background: none; border: none; color: #f43f5e; font-weight: 600; cursor: pointer; text-decoration: underline; margin-right: 4px; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .error-msg { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; font-size: 12px; padding: 9px; border-radius: 10px; margin-bottom: 12px; display: none; text-align: right; }
+        
+        /* Plans Container */
+        .plans-container { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 20px; text-align: right; }
+        @media(min-width: 600px) { .plans-container { grid-template-columns: repeat(3, 1fr); } }
+        .plan-card { background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 20px 16px; cursor: pointer; transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .plan-card.selected { background: linear-gradient(180deg, rgba(225, 29, 72, 0.12) 0%, rgba(18, 18, 24, 0.8) 100%); border-color: #e11d48; box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3); }
+        .plan-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #e11d48, #9f1239); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 12px; border-radius: 20px; }
+        .plan-features { list-style: none; margin: 14px 0; font-size: 11.5px; color: #9ca3af; line-height: 1.7; text-align: right; }
+        .plan-features li { display: flex; align-items: center; gap: 6px; }
     </style>
 
-    <!-- Firebase App & Auth SDK (Compat) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </head>
@@ -395,7 +55,7 @@
     <div class="glow-2"></div>
 
     <main>
-        <div class="glass-panel" id="main-panel-box">
+        <div class="glass-panel">
 
             <!-- 1. LOGIN SCREEN -->
             <div id="screen-login" class="screen active">
@@ -471,43 +131,42 @@
             <!-- 3. PLAN SELECTION SCREEN -->
             <div id="screen-plans" class="screen">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <button onclick="logoutUser()" style="background:none; border:none; color:#9ca3af; font-size:12px; cursor:pointer;">← התנתקות</button>
-                    <span style="font-size: 11px; color: #e11d48; font-weight: 700; background: rgba(225,29,72,0.1); padding: 3px 10px; border-radius: 20px;">שלב אחרון לפני צפייה</span>
+                    <button onclick="showScreen('screen-login')" style="background:none; border:none; color:#9ca3af; font-size:12px; cursor:pointer;">← חזרה להתחברות</button>
+                    <span style="font-size: 11px; color: #e11d48; font-weight: 700; background: rgba(225,29,72,0.1); padding: 3px 10px; border-radius: 20px;">שלב אחרון</span>
                 </div>
                 <h2>בחר את מסלול הצפייה שלך</h2>
-                <p class="subtitle">השווה מסלולים ובחר את החוויה המתאימה לך ביותר</p>
+                <p class="subtitle">השווה מסלולים ובחר את החוויה המתאימה לך</p>
 
                 <div class="plans-container">
-                    
                     <!-- Free Trial (Default Selected) -->
                     <div id="plan-freetrial" onclick="selectPlan('freetrial')" class="plan-card selected">
                         <div class="plan-badge">מומלץ להתחלה</div>
                         <div>
                             <h3 style="font-size:16px; font-weight:800; color:#eab308; margin-bottom:4px;">🎁 Free Trial</h3>
-                            <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:10px;">₪0 <span style="font-size:11px; color:#9ca3af; font-weight:400;">/ חודש ראשון</span></div>
+                            <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:10px;">₪0 <span style="font-size:11px; color:#9ca3af;">/ חודש</span></div>
                             <ul class="plan-features">
-                                <li>✔️ 1080p Full HD איכות צפייה</li>
-                                <li>✔️ צפייה במכשיר 1 במקביל</li>
-                                <li>✔️ גישה מלאה לקטלוג הבסיסי</li>
-                                <li>✔️ ללא חיוב או כרטיס אשראי</li>
+                                <li>✔️ 1080p Full HD</li>
+                                <li>✔️ מכשיר 1 במקביל</li>
+                                <li>✔️ קטלוג סרטים בסיסי</li>
+                                <li>✔️ ללא אשראי נדרש</li>
                             </ul>
                         </div>
-                        <div style="font-size:11px; font-weight:700; color:#eab308; background:rgba(234,179,8,0.1); padding:8px; border-radius:10px; margin-top:10px;">מסלול ברירת מחדל</div>
+                        <div style="font-size:11px; font-weight:700; color:#eab308; background:rgba(234,179,8,0.1); padding:6px; border-radius:8px; margin-top:8px;">ברירת מחדל</div>
                     </div>
 
                     <!-- 2 Months Pro -->
                     <div id="plan-2months" onclick="selectPlan('2months')" class="plan-card">
                         <div>
                             <h3 style="font-size:16px; font-weight:800; color:#3b82f6; margin-bottom:4px;">🚀 מסלול Pro</h3>
-                            <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:10px;">₪59 <span style="font-size:11px; color:#9ca3af; font-weight:400;">/ ל-2 חודשים</span></div>
+                            <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:10px;">₪59 <span style="font-size:11px; color:#9ca3af;">/ 2 חודשים</span></div>
                             <ul class="plan-features">
-                                <li>✔️ 4K Ultra HD + HDR אמיתי</li>
-                                <li>✔️ צפייה ב-2 מכשירים במקביל</li>
-                                <li>✔️ ללא פרסומות מציקות בכלל</li>
-                                <li>✔️ שרתים מהירים במיוחד</li>
+                                <li>✔️ 4K Ultra HD + HDR</li>
+                                <li>✔️ 2 מכשירים במקביל</li>
+                                <li>✔️ ללא פרסומות כלל</li>
+                                <li>✔️ שרתים מהירים</li>
                             </ul>
                         </div>
-                        <div style="font-size:11px; font-weight:700; color:#3b82f6; background:rgba(59,130,246,0.1); padding:8px; border-radius:10px; margin-top:10px;">בחר מסלול</div>
+                        <div style="font-size:11px; font-weight:700; color:#3b82f6; background:rgba(59,130,246,0.1); padding:6px; border-radius:8px; margin-top:8px;">בחר מסלול</div>
                     </div>
 
                     <!-- 6 Months VIP -->
@@ -515,17 +174,16 @@
                         <div class="plan-badge" style="background:linear-gradient(135deg, #3b82f6, #1e3a8a);">המשתלם ביותר</div>
                         <div>
                             <h3 style="font-size:16px; font-weight:800; color:#f43f5e; margin-bottom:4px;">👑 מסלול VIP</h3>
-                            <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:10px;">₪149 <span style="font-size:11px; color:#9ca3af; font-weight:400;">/ ל-6 חודשים</span></div>
+                            <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:10px;">₪149 <span style="font-size:11px; color:#9ca3af;">/ 6 חודשים</span></div>
                             <ul class="plan-features">
-                                <li>✔️ 4K Dolby Vision + Spatial Audio</li>
-                                <li>✔️ צפייה ב-4 מכשירים במקביל</li>
-                                <li>✔️ גישה מוקדמת לסרטי בלאקבאסטר</li>
-                                <li>✔️ תמיכה VIP עדיפות עליונה</li>
+                                <li>✔️ 4K Dolby Vision</li>
+                                <li>✔️ 4 מכשירים במקביל</li>
+                                <li>✔️ גישה מוקדמת לתכנים</li>
+                                <li>✔️ תמיכה VIP מלאה</li>
                             </ul>
                         </div>
-                        <div style="font-size:11px; font-weight:700; color:#f43f5e; background:rgba(244,63,94,0.1); padding:8px; border-radius:10px; margin-top:10px;">בחר מסלול</div>
+                        <div style="font-size:11px; font-weight:700; color:#f43f5e; background:rgba(244,63,94,0.1); padding:6px; border-radius:8px; margin-top:8px;">בחר מסלול</div>
                     </div>
-
                 </div>
 
                 <button onclick="confirmPlanChoice()" class="btn-red">הפעלת מנוי והתחלת צפייה 🎬</button>
@@ -536,64 +194,13 @@
                 <div style="font-size:45px; margin-bottom:10px;">💳</div>
                 <h2>מעבר למערכת סליקה מאובטחת</h2>
                 <p class="subtitle" style="margin-top:10px;">המסלול שבחרת דורש תשלום. אפשרות הסליקה מנוטרלת כרגע בגרסת ההדגמה.</p>
-                <button onclick="showScreen('screen-dashboard')" class="btn-red">מעבר ישיר לדשבורד (Demo)</button>
+                <button onclick="redirectToDashboard()" class="btn-red">מעבר ישיר לדשבורד (Demo)</button>
                 <button onclick="showScreen('screen-plans')" class="btn-red btn-secondary">חזרה לבחירת מסלול</button>
-            </div>
-
-            <!-- 5. DASHBOARD SCREEN ("after.log" / Main App View) -->
-            <div id="screen-dashboard" class="screen">
-                <div class="dash-header">
-                    <div class="user-pill">
-                        <span style="font-size:20px;">👤</span>
-                        <div style="text-align:right;">
-                            <div id="dash-user-name" style="font-weight:700; font-size:13px; color:#fff;">משתמש ראשי</div>
-                            <div id="dash-user-email" style="font-size:11px; color:#9ca3af;">user@movietime.com</div>
-                        </div>
-                    </div>
-                    <button onclick="logoutUser()" class="btn-red btn-secondary" style="margin:0; width:auto; padding:8px 16px; font-size:12px;">התנתקות</button>
-                </div>
-
-                <div style="background: linear-gradient(135deg, rgba(225,29,72,0.15) 0%, rgba(30,58,138,0.15) 100%); border: 1px solid rgba(225,29,72,0.3); border-radius: 18px; padding: 18px; text-align: right; margin-bottom: 20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span style="font-size:14px; font-weight:800; color:#fff;">🌟 סטטוס מנוי פעיל</span>
-                        <span id="dash-plan-name" style="font-size:12px; font-weight:700; color:#eab308; background:rgba(234,179,8,0.15); padding:3px 10px; border-radius:20px;">Free Trial</span>
-                    </div>
-                    <p style="font-size:12px; color:#9ca3af;">החשבון שלך מחובר ומאומת בהצלחה במסד הנתונים של Firebase. תהנה מצפייה ללא הגבלה!</p>
-                </div>
-
-                <div style="text-align:right; margin-bottom:12px;">
-                    <h3 style="font-size:16px; font-weight:800; color:#fff; margin-bottom:4px;">🔥 סרטים וסדרות פופולריים לצפייה</h3>
-                    <p style="font-size:11px; color:#9ca3af;">התכנים המובילים שנצפו השבוע ב-Movie Time</p>
-                </div>
-
-                <div class="movies-grid">
-                    <div class="movie-card">
-                        <div style="font-size:32px; margin-bottom:8px;">🌌</div>
-                        <div style="font-weight:700; font-size:13px; color:#fff;">בין כוכבים</div>
-                        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">מדע בדיוני • 4K</div>
-                    </div>
-                    <div class="movie-card">
-                        <div style="font-size:32px; margin-bottom:8px;">🏎️</div>
-                        <div style="font-weight:700; font-size:13px; color:#fff;">מהיר ועצבני</div>
-                        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">אקשן • Ultra HD</div>
-                    </div>
-                    <div class="movie-card">
-                        <div style="font-size:32px; margin-bottom:8px;">🦇</div>
-                        <div style="font-weight:700; font-size:13px; color:#fff;">האביר האפל</div>
-                        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">מתח • Dolby Atmos</div>
-                    </div>
-                    <div class="movie-card">
-                        <div style="font-size:32px; margin-bottom:8px;">🦁</div>
-                        <div style="font-weight:700; font-size:13px; color:#fff;">מלך האריות</div>
-                        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">אנימציה • משפחה</div>
-                    </div>
-                </div>
             </div>
 
         </div>
     </main>
 
-    <!-- Professional App & Firebase Controller Script -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCNoQaVIpyFuOOuGe6n31qiZ-E2SlD0kFg",
@@ -609,46 +216,30 @@
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
-        let activePlan = 'freetrial'; // ברירת מחדל Free Trial
-        let currentUserData = { name: '', email: '' };
+        let activePlan = 'freetrial';
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
-            // Adjust panel width based on active screen
-            const panelBox = document.getElementById('main-panel-box');
-            if (id === 'screen-dashboard') {
-                panelBox.className = 'glass-panel dashboard-panel';
-            } else {
-                panelBox.className = 'glass-panel';
-            }
         }
 
-        // 1. Google Authentication (Explicit action only)
+        // 1. Google Authentication (Explicit Action Only)
         function handleGoogleAuth() {
             auth.signInWithPopup(provider).then((result) => {
-                const user = result.user;
-                currentUserData.name = user.displayName || user.email.split('@')[0];
-                currentUserData.email = user.email;
                 showScreen('screen-plans');
             }).catch((error) => {
-                // Fallback to redirect if popup fails on mobile
                 auth.signInWithRedirect(provider);
             });
         }
 
-        // 2. Email Login (Explicit action only)
+        // 2. Email Login (Explicit Action Only)
         function handleEmailLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-password').value.trim();
             const errorEl = document.getElementById('login-error');
 
-            auth.signInWithEmailAndPassword(email, pass).then((userCredential) => {
-                const user = userCredential.user;
-                currentUserData.name = user.displayName || email.split('@')[0];
-                currentUserData.email = user.email;
+            auth.signInWithEmailAndPassword(email, pass).then(() => {
                 errorEl.style.display = 'none';
                 showScreen('screen-plans');
             }).catch((error) => {
@@ -657,7 +248,7 @@
             });
         }
 
-        // 3. Email Registration (Explicit action only)
+        // 3. Email Registration (Explicit Action Only)
         function handleRegisterSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -666,10 +257,7 @@
             const errorEl = document.getElementById('reg-error');
 
             auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
-                const user = userCredential.user;
-                return user.updateProfile({ displayName: name }).then(() => {
-                    currentUserData.name = name;
-                    currentUserData.email = email;
+                return userCredential.user.updateProfile({ displayName: name }).then(() => {
                     errorEl.style.display = 'none';
                     showScreen('screen-plans');
                 });
@@ -679,7 +267,6 @@
             });
         }
 
-        // Plan Selection Logic
         function selectPlan(planId) {
             activePlan = planId;
             document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
@@ -687,76 +274,43 @@
         }
 
         function confirmPlanChoice() {
-            const planTitles = {
-                'freetrial': 'Free Trial (₪0 / חודש ראשון)',
-                '2months': 'מסלול Pro (₪59 / ל-2 חודשים)',
-                '6months': 'מסלול VIP (₪149 / ל-6 חודשים)'
-            };
-
-            const finalName = currentUserData.name || auth.currentUser?.displayName || 'משתמש Movie Time';
-            const finalEmail = currentUserData.email || auth.currentUser?.email || 'user@movietime.com';
-
-            document.getElementById('dash-user-name').innerText = finalName;
-            document.getElementById('dash-user-email').innerText = finalEmail;
-            document.getElementById('dash-plan-name').innerText = planTitles[activePlan];
-
             if (activePlan === 'freetrial') {
-                showScreen('screen-dashboard');
+                redirectToDashboard();
             } else {
                 showScreen('screen-paid-block');
             }
         }
 
-        function logoutUser() {
-            auth.signOut().then(() => {
-                showScreen('screen-login');
-            });
+        function redirectToDashboard() {
+            // מעבר לקובץ הנפרד after.log ושמירת המסלול ב-localStorage
+            localStorage.setItem('movieTimePlan', activePlan);
+            window.location.href = 'after.log';
         }
 
-        // Particle Canvas Background Animation
+        // Canvas animation
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
-
         function initCanvas() {
             w = canvas.width = window.innerWidth;
             h = canvas.height = window.innerHeight;
             particles = [];
-            for (let i = 0; i < 45; i++) {
-                particles.push({
-                    x: Math.random() * w,
-                    y: Math.random() * h,
-                    r: Math.random() * 1.5 + 0.5,
-                    vx: (Math.random() - 0.5) * 0.3,
-                    vy: (Math.random() - 0.5) * 0.3,
-                    alpha: Math.random() * 0.6 + 0.2
-                });
+            for (let i = 0; i < 40; i++) {
+                particles.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5 + 0.5, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, alpha: Math.random() * 0.6 + 0.2 });
             }
         }
-
         function animateCanvas() {
             ctx.clearRect(0, 0, w, h);
             particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x < 0) p.x = w;
-                if (p.x > w) p.x = 0;
-                if (p.y < 0) p.y = h;
-                if (p.y > h) p.y = 0;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-                ctx.fill();
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = w; if (p.x > w) p.x = 0; if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`; ctx.fill();
             });
             requestAnimationFrame(animateCanvas);
         }
-
         window.addEventListener('resize', initCanvas);
-        window.onload = () => {
-            initCanvas();
-            animateCanvas();
-        };
+        window.onload = () => { initCanvas(); animateCanvas(); };
     </script>
 </body>
 </html>
