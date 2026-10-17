@@ -422,7 +422,7 @@
         </div>
     </main>
 
-    <!-- Real Firebase Authentication Logic -->
+    <!-- Real Firebase Authentication Logic (Redirect fix for mobile) -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCNoQaVIpyFuOOuGe6n31qiZ-E2SlD0kFg",
@@ -446,19 +446,26 @@
             document.getElementById(id).classList.add('active');
         }
 
-        // 1. Real Google Auth
-        function handleGoogleAuth() {
-            auth.signInWithPopup(provider).then((result) => {
+        // בדיקה האם המשתמש חזר בהצלחה מדף ההתחברות של גוגל (Redirect)
+        auth.getRedirectResult().then((result) => {
+            if (result && result.user) {
                 const user = result.user;
                 currentUserData.name = user.displayName || 'משתמש Google';
                 currentUserData.email = user.email;
                 showScreen('screen-plans');
-            }).catch((error) => {
+            }
+        }).catch((error) => {
+            console.error("שגיאה בחזרת ההתחברות:", error);
+        });
+
+        // התחברות Google אמיתית באמצעות Redirect (מונע סגירת פופ-אפ במובייל)
+        function handleGoogleAuth() {
+            auth.signInWithRedirect(provider).catch((error) => {
                 alert("שגיאה בהתחברות Google: " + error.message);
             });
         }
 
-        // 2. Real Email Login
+        // Real Email Login
         function handleEmailLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
@@ -477,7 +484,7 @@
             });
         }
 
-        // 3. Real Email Registration
+        // Real Email Registration
         function handleRegisterSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -487,7 +494,6 @@
 
             auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
                 const user = userCredential.user;
-                // Save display name
                 return user.updateProfile({ displayName: name }).then(() => {
                     currentUserData.name = name;
                     currentUserData.email = email;
