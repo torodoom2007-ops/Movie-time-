@@ -1,8 +1,444 @@
-    <!-- Firebase SDKs & Auth Logic (Fixed for Mobile Redirect) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Time - חוויית קולנוע מודרנית</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Heebo', sans-serif;
+        }
 
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #08080a;
+            color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .glow-1 {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: rgba(185, 28, 28, 0.2);
+            border-radius: 50%;
+            filter: blur(100px);
+            top: -50px;
+            right: -50px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .glow-2 {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: rgba(30, 58, 138, 0.15);
+            border-radius: 50%;
+            filter: blur(100px);
+            bottom: -50px;
+            left: -50px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            padding: 16px;
+            margin: auto;
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 22, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(225, 29, 72, 0.2) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border: 1px solid rgba(225, 29, 72, 0.4);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        h1, h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 18px;
+        }
+
+        .btn-google:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-google svg {
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px;
+            min-height: 20px;
+            flex-shrink: 0;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 16px 0;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+            text-align: right;
+        }
+
+        .custom-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: #e11d48;
+            box-shadow: 0 0 14px rgba(225, 29, 72, 0.3);
+        }
+
+        .btn-red {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+            margin-top: 6px;
+        }
+
+        .btn-red:hover {
+            box-shadow: 0 6px 20px rgba(225, 29, 72, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            margin-top: 10px;
+        }
+
+        .switch-link {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .switch-link button {
+            background: none;
+            border: none;
+            color: #f43f5e;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-right: 4px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            font-size: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .plans-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .plan-card {
+            padding: 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .plan-blue {
+            background: rgba(30, 58, 138, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .plan-red {
+            background: rgba(159, 18, 57, 0.15);
+            border-color: rgba(225, 29, 72, 0.4);
+        }
+
+        .plan-gold {
+            background: rgba(161, 98, 7, 0.15);
+            border-color: rgba(234, 179, 8, 0.4);
+        }
+
+        .plan-card.selected {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e11d48;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+    </style>
+
+    <!-- Firebase App & Auth SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+
+    <main>
+        <div class="glass-panel">
+
+            <!-- 1. LOGIN SCREEN -->
+            <div id="screen-login" class="screen active">
+                <div class="logo-icon">🎬</div>
+                <h1>Movie Time</h1>
+                <p class="subtitle">התחברות לחוויית צפייה קולנועית</p>
+
+                <button onclick="handleGoogleAuth()" class="btn-google">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span>התחברות באמצעות Google</span>
+                </button>
+
+                <div class="divider"><span>או באמצעות אימייל</span></div>
+
+                <form onsubmit="handleEmailLogin(event)">
+                    <div class="form-group">
+                        <input type="email" id="login-email" class="custom-input" placeholder="כתובת אימייל" required value="user@movietime.com">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="login-password" class="custom-input" placeholder="סיסמה" required value="123456">
+                    </div>
+                    <div id="login-error" class="error-msg">הפרטים שגויים, אנא נסה שוב.</div>
+                    <button type="submit" class="btn-red">התחברות</button>
+                </form>
+
+                <div class="switch-link">
+                    עדיין אין לך חשבון? <button onclick="showScreen('screen-register')">הרשמה חדשה</button>
+                </div>
+            </div>
+
+            <!-- 2. REGISTER SCREEN -->
+            <div id="screen-register" class="screen">
+                <div class="logo-icon">👤</div>
+                <h2>הרשמה ל-Movie Time</h2>
+                <p class="subtitle">צור חשבון חדש בחינם ובקלות</p>
+
+                <button onclick="handleGoogleAuth()" class="btn-google">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span>הרשמה באמצעות Google</span>
+                </button>
+
+                <div class="divider"><span>או פרטים אישיים</span></div>
+
+                <form onsubmit="handleRegisterSubmit(event)">
+                    <div class="form-group">
+                        <input type="text" id="reg-name" class="custom-input" placeholder="שם מלא (4-15 תווים)" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="reg-email" class="custom-input" placeholder="כתובת אימייל" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="reg-pass" class="custom-input" placeholder="סיסמה (לפחות 6 תווים)" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="reg-dob" class="custom-input" style="color:#a0a0a5;" required>
+                    </div>
+                    <button type="submit" class="btn-red">הרשמה ובחירת מסלול</button>
+                </form>
+
+                <div class="switch-link">
+                    כבר יש לך חשבון? <button onclick="showScreen('screen-login')">התחברות</button>
+                </div>
+            </div>
+
+            <!-- 3. PLAN SELECTION SCREEN -->
+            <div id="screen-plans" class="screen">
+                <h2>בחירת מסלול צפייה</h2>
+                <p class="subtitle">תיהנה מתכני 4K ללא פרסומות</p>
+
+                <div class="plans-list">
+                    <div id="plan-2months" onclick="selectPlan('2months')" class="plan-card plan-blue">
+                        <div style="font-weight:700; font-size:16px;">2 חודשים</div>
+                        <div style="font-size:12px; color:#a0a0a5;">גישה מלאה לתקופה קצרה</div>
+                        <div style="font-size:20px; font-weight:800; margin-top:6px;">₪59</div>
+                    </div>
+
+                    <div id="plan-6months" onclick="selectPlan('6months')" class="plan-card plan-red selected">
+                        <div class="plan-badge">המשתלם ביותר</div>
+                        <div style="font-weight:700; font-size:16px;">6 חודשים</div>
+                        <div style="font-size:12px; color:#a0a0a5;">חווית קולנוע רציפה במחיר מופחת</div>
+                        <div style="font-size:20px; font-weight:800; margin-top:6px;">₪149</div>
+                    </div>
+
+                    <div id="plan-freetrial" onclick="selectPlan('freetrial')" class="plan-card plan-gold">
+                        <div style="font-weight:700; font-size:16px; color:#eab308;">Free Trial</div>
+                        <div style="font-size:12px; color:#a0a0a5;">חודש 1 חינם ללא כרטיס אשראי!</div>
+                        <div style="font-size:20px; font-weight:800; color:#eab308; margin-top:6px;">₪0</div>
+                    </div>
+                </div>
+
+                <button onclick="confirmPlanChoice()" class="btn-red">הפעלת המנוי והתחלת צפייה</button>
+            </div>
+
+            <!-- 4. PAID BLOCK SCREEN -->
+            <div id="screen-paid-block" class="screen">
+                <h2>מעבר לסליקת אשראי</h2>
+                <p class="subtitle" style="margin-top:10px;">המסלול שנבחר דורש תשלום. אפשרות הסליקה חסומה בגרסת ההדגמה.</p>
+                <button onclick="showScreen('screen-dashboard')" class="btn-red">חזרה למסך הבית (Dashboard)</button>
+                <button onclick="showScreen('screen-plans')" class="btn-red btn-secondary">חזרה לבחירת מסלול</button>
+            </div>
+
+            <!-- 5. DASHBOARD SCREEN -->
+            <div id="screen-dashboard" class="screen">
+                <div style="font-size:40px; margin-bottom:10px;">✅</div>
+                <h2>ברוך הבא ל-Movie Time!</h2>
+                <p class="subtitle">החשבון שלך פעיל. אתה מוכן להתחיל לצפות.</p>
+
+                <div style="background:rgba(255,255,255,0.05); padding:16px; border-radius:14px; text-align:right; margin-bottom:20px; font-size:13px; line-height:1.8;">
+                    <div><strong>משתמש:</strong> <span id="dash-user-name">Op</span></div>
+                    <div><strong>אימייל:</strong> <span id="dash-user-email">user@movietime.com</span></div>
+                    <div><strong>מסלול:</strong> <span id="dash-plan-name" style="color:#f43f5e;">Free Trial</span></div>
+                </div>
+
+                <button onclick="logoutUser()" class="btn-red btn-secondary">התנתקות</button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- App Logic & Firebase Initialization -->
+    <script>
+        // Initialize Firebase
         const firebaseConfig = {
           apiKey: "AIzaSyCNoQaVIpyFuOOuGe6n31qiZ-E2SlD0kFg",
           authDomain: "movie-time-7f4ed.firebaseapp.com",
@@ -13,65 +449,57 @@
           measurementId: "G-0GKDD2P2BE"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
 
         let activePlan = '6months';
         let userDetails = { name: 'Op', email: 'user@movietime.com' };
 
-        window.showScreen = function(id) {
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-        };
+        }
 
-        // בדיקה האם המשתמש חזר בהצלחה מדף ההתחברות של גוגל
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result) {
-                    const user = result.user;
-                    userDetails.name = user.displayName || 'משתמש Google';
-                    userDetails.email = user.email || 'user@gmail.com';
-                    showScreen('screen-plans');
-                }
+        function handleGoogleAuth() {
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                userDetails.name = user.displayName || 'משתמש Google';
+                userDetails.email = user.email || 'user@gmail.com';
+                showScreen('screen-plans');
             }).catch((error) => {
-                console.error("שגיאה בחזרת ההתחברות:", error);
-            });
-
-        // התחברות באמצעות מעבר עמוד (מונע חסימת פופ-אפ בנייד)
-        window.handleGoogleAuth = async function() {
-            try {
-                await signInWithRedirect(auth, provider);
-            } catch (error) {
                 console.error("שגיאה בהתחברות Google:", error);
-                alert("התחברות Google נכשלה: " + error.message);
-            }
-        };
+                // Fallback לדמו מקומי במידה והדפדפן חוסם ב-file://
+                userDetails.name = 'משתמש Google';
+                userDetails.email = 'user@gmail.com';
+                showScreen('screen-plans');
+            });
+        }
 
-        window.handleEmailLogin = function(e) {
+        function handleEmailLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
             userDetails.name = email.split('@')[0];
             userDetails.email = email;
             showScreen('screen-plans');
-        };
+        }
 
-        window.handleRegisterSubmit = function(e) {
+        function handleRegisterSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
             const email = document.getElementById('reg-email').value.trim();
             userDetails.name = name;
             userDetails.email = email;
             showScreen('screen-plans');
-        };
+        }
 
-        window.selectPlan = function(planId) {
+        function selectPlan(planId) {
             activePlan = planId;
             document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
             document.getElementById(`plan-${planId}`).classList.add('selected');
-        };
+        }
 
-        window.confirmPlanChoice = function() {
+        function confirmPlanChoice() {
             const planTitles = {
                 '2months': '2 חודשים (₪59)',
                 '6months': '6 חודשים (₪149)',
@@ -87,14 +515,12 @@
             } else {
                 showScreen('screen-paid-block');
             }
-        };
+        }
 
-        window.logoutUser = async function() {
-            try {
-                await signOut(auth);
-            } catch(e) {}
+        function logoutUser() {
+            auth.signOut().catch(() => {});
             showScreen('screen-login');
-        };
+        }
 
         // Particle Canvas Background
         const canvas = document.getElementById('bg-canvas');
@@ -141,3 +567,5 @@
             animateCanvas();
         };
     </script>
+</body>
+</html>
