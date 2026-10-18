@@ -3,79 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Movie Time - צפייה ישירה</title>
+    <title>Movie Time - פאנל ניהול מתקדם</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-        body, html { width: 100%; min-height: 100vh; background-color: #08080a; color: #f3f4f6; overflow-x: hidden; position: relative; touch-action: pan-y; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; user-select: none; -webkit-user-select: none; }
+        body, html { width: 100%; min-height: 100vh; background-color: #08080a; color: #f3f4f6; overflow-x: hidden; position: relative; }
         
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        .glow-1 { position: fixed; width: 350px; height: 350px; background: rgba(225, 29, 72, 0.15); border-radius: 50%; filter: blur(120px); top: -50px; right: -50px; z-index: 2; pointer-events: none; }
-        .glow-2 { position: fixed; width: 350px; height: 350px; background: rgba(30, 58, 138, 0.12); border-radius: 50%; filter: blur(120px); bottom: -50px; left: -50px; z-index: 2; pointer-events: none; }
+        .glow-1 { position: fixed; width: 400px; height: 400px; background: rgba(225, 29, 72, 0.15); border-radius: 50%; filter: blur(140px); top: -50px; right: -50px; z-index: 2; pointer-events: none; }
+        .glow-2 { position: fixed; width: 400px; height: 400px; background: rgba(30, 58, 138, 0.12); border-radius: 50%; filter: blur(140px); bottom: -50px; left: -50px; z-index: 2; pointer-events: none; }
 
-        main { position: relative; z-index: 10; width: 100%; max-width: 950px; margin: 0 auto; padding: 16px; min-height: 100vh; display: flex; flex-direction: column; }
+        main { position: relative; z-index: 10; width: 100%; max-width: 1000px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 24px; min-height: 100vh; }
 
-        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 16px; }
-        .brand-title { font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #fff 0%, #9ca3af 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Header */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; background: rgba(18, 18, 24, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 16px 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .admin-title { font-size: 20px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .btn-back { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.12); }
+
+        /* Content Layout */
+        .admin-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media(min-width: 768px) { .admin-grid { grid-template-columns: 1.2fr 0.8fr; } }
+
+        .glass-box { background: rgba(18, 18, 24, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
         
-        .header-actions { display: flex; align-items: center; gap: 10px; }
-        .admin-link-btn { background: rgba(225, 29, 72, 0.15); border: 1px solid rgba(225, 29, 72, 0.4); color: #f43f5e; padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; text-decoration: none; cursor: pointer; transition: all 0.2s; }
-        .admin-link-btn:hover { background: #e11d48; color: #fff; }
+        h2 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; }
 
-        .custom-logo { width: 36px; height: 36px; background: linear-gradient(135deg, #e11d48, #be123c); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4); cursor: pointer; }
-        .custom-logo svg { width: 20px; height: 20px; fill: #fff; }
-
-        .nav-tabs { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px; }
-        .nav-tab { background: none; border: none; color: #9ca3af; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; padding: 4px 8px; position: relative; }
-        .nav-tab.active { color: #e11d48; }
-        .nav-tab.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 2px; background: #e11d48; border-radius: 2px; }
-
-        .view-section { display: none; flex-direction: column; flex: 1; }
-        .view-section.active { display: flex; }
-
-        .filters-bar { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-        .custom-select { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; color: #fff; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer; }
+        .form-group { margin-bottom: 14px; text-align: right; }
+        label { font-size: 12px; color: #9ca3af; display: block; margin-bottom: 5px; font-weight: 500; }
+        .custom-input, .custom-select { width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 12px 16px; color: #fff; font-size: 13px; outline: none; transition: all 0.3s; }
+        .custom-input:focus, .custom-select:focus { border-color: #e11d48; box-shadow: 0 0 14px rgba(225, 29, 72, 0.3); background: rgba(255,255,255,0.07); }
         .custom-select option { background: #121218; color: #fff; }
 
-        .search-box { position: relative; margin-bottom: 16px; }
-        .search-input { width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 12px 42px 12px 16px; color: #fff; font-size: 14px; outline: none; }
-        .search-input:focus { border-color: #e11d48; box-shadow: 0 0 12px rgba(225, 29, 72, 0.3); }
-        .search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: #9ca3af; pointer-events: none; }
+        .btn-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #e11d48, #be123c); border: none; border-radius: 14px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4); margin-top: 10px; }
+        .btn-submit:hover { box-shadow: 0 8px 25px rgba(225, 29, 72, 0.6); transform: translateY(-1px); }
 
-        .media-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-        @media(min-width: 600px) { .media-grid { grid-template-columns: repeat(4, 1fr); } }
+        .success-banner { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #86efac; font-size: 13px; padding: 12px; border-radius: 12px; margin-bottom: 16px; display: none; text-align: center; font-weight: 600; }
 
-        .media-card { background: rgba(18, 18, 24, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: all 0.3s ease; }
-        .media-card:hover { transform: translateY(-4px); border-color: rgba(225, 29, 72, 0.6); box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
-        
-        .media-poster { width: 100%; height: 210px; background-size: cover; background-position: center; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; }
-        .media-info { padding: 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
-        .media-title { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .media-desc { font-size: 11px; color: #9ca3af; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        /* Live Preview Card */
+        .preview-card { background: rgba(18, 18, 24, 0.9); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; max-width: 260px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .preview-poster { width: 100%; height: 260px; background: rgba(255,255,255,0.03); background-size: cover; background-position: center; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 12px; }
+        .preview-info { padding: 14px; display: flex; flex-direction: column; gap: 6px; text-align: right; }
+        .preview-title { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .preview-desc { font-size: 11px; color: #9ca3af; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
 
-        .detail-view { display: none; flex-direction: column; gap: 16px; background: rgba(18, 18, 24, 0.95); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 20px; animation: fadeIn 0.3s ease; }
-        .detail-view.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .back-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; width: fit-content; display: flex; align-items: center; gap: 6px; }
-        .back-btn:hover { background: rgba(255,255,255,0.12); }
-
-        .detail-banner { width: 100%; height: 240px; background-size: cover; background-position: center; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
-        
-        .play-btn-circle { position: absolute; left: 16px; bottom: 16px; width: 52px; height: 52px; background: #e11d48; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(225,29,72,0.6); cursor: pointer; transition: transform 0.2s; }
-        .play-btn-circle:hover { transform: scale(1.08); }
-        .play-btn-circle svg { width: 24px; height: 24px; fill: #fff; margin-right: -2px; }
-
-        .meta-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
-        .meta-tag { background: rgba(225, 29, 72, 0.15); color: #f43f5e; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(225, 29, 72, 0.3); }
-
-        #video-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 16px; }
-        #video-modal.active { display: flex; }
-        .video-container { width: 100%; max-width: 850px; background: #000; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.2); }
-        video { width: 100%; height: auto; max-height: 75vh; display: block; outline: none; }
-        .close-video-btn { position: absolute; top: 16px; left: 16px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; z-index: 1010; font-size: 13px; }
-        .close-video-btn:hover { background: #e11d48; }
-        .loading-text { text-align: center; color: #9ca3af; font-size: 14px; padding: 30px; grid-column: span 2; }
+        /* Existing Movies List Manager */
+        .movies-list-admin { display: flex; flex-direction: column; gap: 10px; max-height: 450px; overflow-y: auto; padding-left: 4px; }
+        .admin-movie-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 14px; border-radius: 12px; gap: 10px; }
+        .admin-movie-details { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+        .admin-movie-thumb { width: 40px; height: 40px; border-radius: 8px; background-size: cover; background-position: center; flex-shrink: 0; }
+        .admin-movie-name { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-delete { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+        .btn-delete:hover { background: #ef4444; color: #fff; }
     </style>
 
     <!-- Firebase SDKs -->
@@ -89,86 +68,80 @@
     <div class="glow-1"></div>
     <div class="glow-2"></div>
 
-    <div id="video-modal">
-        <button class="close-video-btn" onclick="closeVideoPlayer()">✕ סגור נגן</button>
-        <div class="video-container">
-            <video id="main-video-player" controls>
-                <source id="video-source" src="" type="video/mp4">
-            </video>
-        </div>
-    </div>
-
     <main>
-        <header class="app-header">
-            <div class="brand-title">Movie Time</div>
-            <div class="header-actions">
-                <a href="admin.html" class="admin-link-btn">⚙️ הוספת סרט</a>
-                <div class="custom-logo" title="התנתקות" onclick="logoutUser()">
-                    <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM4 18V8h16v10H4z"/></svg>
-                </div>
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-title">
+                <span>🎬</span> פאנל ניהול תוכן ראשי
             </div>
+            <a href="after.log" class="btn-back">← חזרה למסך צפייה</a>
         </header>
 
-        <nav class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('movies')">סרטים</button>
-            <button class="nav-tab" onclick="switchTab('search')">חיפוש</button>
-        </nav>
+        <div id="success-alert" class="success-banner">הסרט הועלה בהצלחה ומנוהל כעת בענן! 🚀</div>
 
-        <section id="tab-movies" class="view-section active">
-            <div id="movies-list-container">
-                <div class="filters-bar">
-                    <select id="movie-cat-filter" class="custom-select" onchange="filterAndSortMovies()">
-                        <option value="all">כל הקטגוריות</option>
-                        <option value="פעולה">פעולה</option>
-                        <option value="קומדיה">קומדיה</option>
-                        <option value="פשע">פשע</option>
-                        <option value="דוקומנטרי">דוקומנטרי</option>
-                        <option value="אימה">אימה</option>
-                        <option value="אנימציה">אנימציה</option>
-                        <option value="מדע בדיוני">מדע בדיוני</option>
-                    </select>
+        <div class="admin-grid">
+            <!-- Left Side: Add Movie Form -->
+            <div class="glass-box">
+                <h2>➕ הוספת סרט חדש</h2>
+                <form onsubmit="addNewMovie(event)">
+                    <div class="form-group">
+                        <label>שם הסרט</label>
+                        <input type="text" id="movie-title" class="custom-input" placeholder="למשל: בין כוכבים" oninput="updatePreview()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>קטגוריה</label>
+                        <select id="movie-category" class="custom-select">
+                            <option value="פעולה">פעולה</option>
+                            <option value="קומדיה">קומדיה</option>
+                            <option value="פשע">פשע</option>
+                            <option value="דוקומנטרי">דוקומנטרי</option>
+                            <option value="אימה">אימה</option>
+                            <option value="אנימציה">אנימציה</option>
+                            <option value="מדע בדיוני">מדע בדיוני</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>שנת הוצאה</label>
+                        <input type="number" id="movie-year" class="custom-input" placeholder="2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label>תיאור קצר</label>
+                        <input type="text" id="movie-desc" class="custom-input" placeholder="תקציר קצר על הסרט..." oninput="updatePreview()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>קישור לתמונת פוסטר (Image URL)</label>
+                        <input type="url" id="movie-poster" class="custom-input" placeholder="הדבק כאן קישור לתמונה מ-ImgBB או רשת" oninput="updatePreview()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>קישור לוידאו צפייה (MP4 Video URL)</label>
+                        <input type="url" id="movie-video" class="custom-input" placeholder="https://.../video.mp4" required>
+                    </div>
 
-                    <select id="movie-sort-filter" class="custom-select" onchange="filterAndSortMovies()">
-                        <option value="newest">החדש ביותר</option>
-                        <option value="oldest">הישן ביותר</option>
-                        <option value="popular">הנצפה ביותר</option>
-                    </select>
-                </div>
-
-                <div id="movies-grid" class="media-grid">
-                    <div class="loading-text">טוען סרטים מ-Firebase...</div>
-                </div>
+                    <button type="submit" class="btn-submit">פרסם סרט למערכת 🎬</button>
+                </form>
             </div>
 
-            <div id="movie-detail-view" class="detail-view">
-                <button class="back-btn" onclick="closeMovieDetail()">
-                    <svg style="width:14px;height:14px;fill:currentColor;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-                    חזור
-                </button>
-                <div id="detail-movie-banner" class="detail-banner">
-                    <div class="play-btn-circle" onclick="playCurrentMovie()">
-                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <!-- Right Side: Live Preview & Existing Movies Manager -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+                <div class="glass-box">
+                    <h2>👁️ תצוגה מקדימה לכרטיס</h2>
+                    <div class="preview-card">
+                        <div id="preview-img" class="preview-poster">אין תמונה</div>
+                        <div class="preview-info">
+                            <div id="preview-title-txt" class="preview-title">שם הסרט</div>
+                            <div id="preview-desc-txt" class="preview-desc">כאן יופיע תיאור הסרט הקצר...</div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <h2 id="detail-movie-title" style="font-size:20px; font-weight:800; color:#fff;"></h2>
-                    <div class="meta-tags">
-                        <span id="detail-movie-year" class="meta-tag"></span>
-                        <span id="detail-movie-cat" class="meta-tag"></span>
-                        <span class="meta-tag" style="background:rgba(59,130,246,0.15); color:#3b82f6; border-color:rgba(59,130,246,0.3)">4K Ultra HD</span>
+
+                <div class="glass-box" style="flex: 1;">
+                    <h2>🗑️ ניהול סרטים קיימים בענן</h2>
+                    <div id="admin-movies-list" class="movies-list-admin">
+                        <div style="color: #9ca3af; font-size: 12px; text-align: center; padding: 20px;">טוען סרטים...</div>
                     </div>
-                    <p id="detail-movie-desc" style="font-size:13px; color:#9ca3af; line-height:1.6; margin-top:10px;"></p>
                 </div>
             </div>
-        </section>
-
-        <section id="tab-search" class="view-section">
-            <div class="search-box">
-                <input type="text" id="search-input-field" class="search-input" placeholder="חפש סרטים, קטגוריות..." oninput="handleSearchInput()">
-                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            </div>
-            <div id="search-results-grid" class="media-grid"></div>
-        </section>
+        </div>
     </main>
 
     <script>
@@ -183,161 +156,90 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let moviesList = [];
-        let selectedMovie = null;
+        // Live preview update
+        function updatePreview() {
+            const title = document.getElementById('movie-title').value.trim();
+            const desc = document.getElementById('movie-desc').value.trim();
+            const poster = document.getElementById('movie-poster').value.trim();
 
-        // Auth Protection
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                setTimeout(() => {
-                    if (!auth.currentUser) window.location.href = 'index.html';
-                }, 1000);
+            document.getElementById('preview-title-txt').innerText = title || 'שם הסרט';
+            document.getElementById('preview-desc-txt').innerText = desc || 'כאן יופיע תיאור הסרט הקצר...';
+            
+            const posterBox = document.getElementById('preview-img');
+            if (poster) {
+                posterBox.style.backgroundImage = `url('${poster}')`;
+                posterBox.innerText = '';
+            } else {
+                posterBox.style.backgroundImage = 'none';
+                posterBox.innerText = 'אין תמונה';
             }
+        }
+
+        // Fetch movies for management list
+        db.collection("movies").onSnapshot((snapshot) => {
+            const listEl = document.getElementById('admin-movies-list');
+            listEl.innerHTML = '';
+
+            if (snapshot.empty) {
+                listEl.innerHTML = `<div style="color: #9ca3af; font-size: 12px; text-align: center; padding: 20px;">אין סרטים במערכת כרגע.</div>`;
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const m = doc.data();
+                const id = doc.id;
+                listEl.innerHTML += `
+                    <div class="admin-movie-item">
+                        <div class="admin-movie-details">
+                            <div class="admin-movie-thumb" style="background-image: url('${m.posterUrl}');"></div>
+                            <div class="admin-movie-name">${m.title}</div>
+                        </div>
+                        <button class="btn-delete" onclick="deleteMovie('${id}')">מחק</button>
+                    </div>
+                `;
+            });
         });
 
-        // Fetch Movies Live from Firestore Database
-        function fetchMoviesFromFirestore() {
-            db.collection("movies").onSnapshot((snapshot) => {
-                moviesList = [];
-                snapshot.forEach((doc) => {
-                    moviesList.push({ id: doc.id, ...doc.data() });
+        // Add Movie to Firestore
+        function addNewMovie(e) {
+            e.preventDefault();
+            
+            const newMovie = {
+                title: document.getElementById('movie-title').value.trim(),
+                category: document.getElementById('movie-category').value,
+                year: parseInt(document.getElementById('movie-year').value),
+                desc: document.getElementById('movie-desc').value.trim(),
+                posterUrl: document.getElementById('movie-poster').value.trim(),
+                videoUrl: document.getElementById('movie-video').value.trim(),
+                views: Math.floor(Math.random() * 5000) + 500,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            db.collection("movies").add(newMovie)
+                .then(() => {
+                    const alertEl = document.getElementById('success-alert');
+                    alertEl.style.display = 'block';
+                    setTimeout(() => { alertEl.style.display = 'none'; }, 4000);
+                    e.target.reset();
+                    updatePreview();
+                })
+                .catch((error) => {
+                    alert("שגיאה בהעלאת הסרט: " + error.message);
                 });
-                filterAndSortMovies();
-            }, (error) => {
-                console.error("Error fetching movies:", error);
-            });
         }
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-
-            if (tabName === 'movies') {
-                document.querySelectorAll('.nav-tab')[0].classList.add('active');
-                document.getElementById('tab-movies').classList.add('active');
-                closeMovieDetail();
-            } else if (tabName === 'search') {
-                document.querySelectorAll('.nav-tab')[1].classList.add('active');
-                document.getElementById('tab-search').classList.add('active');
+        // Delete Movie from Firestore
+        function deleteMovie(id) {
+            if (confirm("האם אתה בטוח שברצונך למחוק סרט זה מהמערכת?")) {
+                db.collection("movies").doc(id).delete().catch((error) => {
+                    alert("שגיאה במחיקת הסרט: " + error.message);
+                });
             }
         }
 
-        function renderMovies(list) {
-            const grid = document.getElementById('movies-grid');
-            grid.innerHTML = '';
-
-            if (list.length === 0) {
-                grid.innerHTML = `<div class="loading-text">עדיין לא הועלו סרטים. כנס ל-⚙️ הוספת סרט כדי להעלות!</div>`;
-                return;
-            }
-
-            list.forEach(m => {
-                grid.innerHTML += `
-                    <div class="media-card" onclick="openMovieDetail('${m.id}')">
-                        <div class="media-poster" style="background-image: url('${m.posterUrl}');"></div>
-                        <div class="media-info">
-                            <div class="media-title">${m.title}</div>
-                            <div class="media-desc">${m.desc}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function filterAndSortMovies() {
-            const cat = document.getElementById('movie-cat-filter').value;
-            const sort = document.getElementById('movie-sort-filter').value;
-
-            let result = [...moviesList];
-            if (cat !== 'all') result = result.filter(m => m.category === cat);
-            if (sort === 'newest') result.sort((a,b) => (b.year || 0) - (a.year || 0));
-            if (sort === 'oldest') result.sort((a,b) => (a.year || 0) - (b.year || 0));
-            if (sort === 'popular') result.sort((a,b) => (b.views || 0) - (a.views || 0));
-
-            renderMovies(result);
-        }
-
-        function openMovieDetail(id) {
-            const m = moviesList.find(item => item.id === id);
-            if (!m) return;
-            selectedMovie = m;
-            document.getElementById('detail-movie-banner').style.backgroundImage = `url('${m.posterUrl}')`;
-            document.getElementById('detail-movie-title').innerText = m.title;
-            document.getElementById('detail-movie-year').innerText = 'שנה: ' + m.year;
-            document.getElementById('detail-movie-cat').innerText = 'קטגוריה: ' + m.category;
-            document.getElementById('detail-movie-desc').innerText = m.desc;
-
-            document.getElementById('movies-list-container').style.display = 'none';
-            document.getElementById('movie-detail-view').classList.add('active');
-        }
-
-        function closeMovieDetail() {
-            document.getElementById('movie-detail-view').classList.remove('active');
-            document.getElementById('movies-list-container').style.display = 'block';
-        }
-
-        function playCurrentMovie() {
-            if (selectedMovie && selectedMovie.videoUrl) {
-                openVideoPlayer(selectedMovie.videoUrl);
-            }
-        }
-
-        function openVideoPlayer(url) {
-            const modal = document.getElementById('video-modal');
-            const video = document.getElementById('main-video-player');
-            const source = document.getElementById('video-source');
-            source.src = url;
-            video.load();
-            modal.classList.add('active');
-            video.play().catch(e => console.log("Autoplay prevented:", e));
-        }
-
-        function closeVideoPlayer() {
-            const modal = document.getElementById('video-modal');
-            const video = document.getElementById('main-video-player');
-            video.pause();
-            video.currentTime = 0;
-            modal.classList.remove('active');
-        }
-
-        function handleSearchInput() {
-            const query = document.getElementById('search-input-field').value.toLowerCase().trim();
-            const grid = document.getElementById('search-results-grid');
-            grid.innerHTML = '';
-
-            if(!query) return;
-
-            const matched = moviesList.filter(m => m.title.toLowerCase().includes(query) || m.category.toLowerCase().includes(query));
-
-            if(matched.length === 0) {
-                grid.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#9ca3af; padding: 20px;">לא נמצאו תוצאות עבור "${query}"</div>`;
-                return;
-            }
-
-            matched.forEach(item => {
-                grid.innerHTML += `
-                    <div class="media-card" onclick="openMovieDetail('${item.id}'); switchTab('movies');">
-                        <div class="media-poster" style="background-image: url('${item.posterUrl}');"></div>
-                        <div class="media-info">
-                            <div class="media-title">${item.title}</div>
-                            <div class="media-desc">${item.desc}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function logoutUser() {
-            auth.signOut().then(() => {
-                localStorage.removeItem('movieTimePlan');
-                window.location.href = 'index.html';
-            });
-        }
-
-        // Canvas animation
+        // Canvas Background Animation
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
@@ -345,7 +247,7 @@
             w = canvas.width = window.innerWidth;
             h = canvas.height = window.innerHeight;
             particles = [];
-            for (let i = 0; i < 35; i++) {
+            for (let i = 0; i < 30; i++) {
                 particles.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5 + 0.5, vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2, alpha: Math.random() * 0.5 + 0.2 });
             }
         }
@@ -360,11 +262,7 @@
             requestAnimationFrame(animateCanvas);
         }
         window.addEventListener('resize', initCanvas);
-        window.onload = () => { 
-            initCanvas(); 
-            animateCanvas(); 
-            fetchMoviesFromFirestore();
-        };
+        window.onload = () => { initCanvas(); animateCanvas(); };
     </script>
 </body>
 </html>
