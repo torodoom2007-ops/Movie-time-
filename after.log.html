@@ -9,55 +9,51 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
         body, html { width: 100%; min-height: 100vh; background-color: #08080a; color: #f3f4f6; overflow-x: hidden; position: relative; touch-action: pan-y; }
         
-        /* Background Glows & Canvas */
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .glow-1 { position: fixed; width: 350px; height: 350px; background: rgba(225, 29, 72, 0.15); border-radius: 50%; filter: blur(120px); top: -50px; right: -50px; z-index: 2; pointer-events: none; }
         .glow-2 { position: fixed; width: 350px; height: 350px; background: rgba(30, 58, 138, 0.12); border-radius: 50%; filter: blur(120px); bottom: -50px; left: -50px; z-index: 2; pointer-events: none; }
 
-        /* Main Container */
-        main { position: relative; z-index: 10; width: 100%; max-width: 900px; margin: 0 auto; padding: 16px; min-height: 100vh; display: flex; flex-direction: column; }
+        main { position: relative; z-index: 10; width: 100%; max-width: 950px; margin: 0 auto; padding: 16px; min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Header Navigation */
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 16px; }
         .brand-title { font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #fff 0%, #9ca3af 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .header-actions { display: flex; align-items: center; gap: 10px; }
         
         .custom-logo { width: 36px; height: 36px; background: linear-gradient(135deg, #e11d48, #be123c); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4); cursor: pointer; }
         .custom-logo svg { width: 20px; height: 20px; fill: #fff; }
 
-        /* Navigation Tabs */
+        .btn-icon-secondary { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-icon-secondary:hover { background: rgba(255,255,255,0.12); }
+
         .nav-tabs { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px; }
         .nav-tab { background: none; border: none; color: #9ca3af; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; padding: 4px 8px; position: relative; }
         .nav-tab.active { color: #e11d48; }
         .nav-tab.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 2px; background: #e11d48; border-radius: 2px; }
 
-        /* Sections / Views */
         .view-section { display: none; flex-direction: column; flex: 1; }
         .view-section.active { display: flex; }
 
-        /* Filters Bar */
         .filters-bar { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
         .custom-select { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; color: #fff; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer; }
         .custom-select option { background: #121218; color: #fff; }
 
-        /* Search Bar */
         .search-box { position: relative; margin-bottom: 16px; }
         .search-input { width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 12px 42px 12px 16px; color: #fff; font-size: 14px; outline: none; }
         .search-input:focus { border-color: #e11d48; box-shadow: 0 0 12px rgba(225, 29, 72, 0.3); }
         .search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: #9ca3af; pointer-events: none; }
 
-        /* Grid Cards */
-        .media-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .media-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
         @media(min-width: 600px) { .media-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        .media-card { background: rgba(18, 18, 24, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: all 0.3s ease; }
-        .media-card:hover { transform: translateY(-3px); border-color: rgba(225, 29, 72, 0.5); box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+        .media-card { background: rgba(18, 18, 24, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: all 0.3s ease; }
+        .media-card:hover { transform: translateY(-4px); border-color: rgba(225, 29, 72, 0.6); box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
         
-        .media-thumb { width: 100%; height: 130px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 36px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .media-info { padding: 10px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
-        .media-title { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .media-poster { width: 100%; height: 210px; background-size: cover; background-position: center; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; }
+        .media-info { padding: 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .media-title { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .media-desc { font-size: 11px; color: #9ca3af; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
 
-        /* Detail View Layout */
         .detail-view { display: none; flex-direction: column; gap: 16px; background: rgba(18, 18, 24, 0.95); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 20px; animation: fadeIn 0.3s ease; }
         .detail-view.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -65,35 +61,40 @@
         .back-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; width: fit-content; display: flex; align-items: center; gap: 6px; }
         .back-btn:hover { background: rgba(255,255,255,0.12); }
 
-        .detail-banner { width: 100%; height: 180px; background: rgba(255,255,255,0.03); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 54px; border: 1px solid rgba(255,255,255,0.08); position: relative; }
+        .detail-banner { width: 100%; height: 240px; background-size: cover; background-position: center; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         
-        .play-btn-circle { position: absolute; left: 16px; bottom: 16px; width: 48px; height: 48px; background: #e11d48; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(225,29,72,0.6); cursor: pointer; transition: transform 0.2s; }
+        .play-btn-circle { position: absolute; left: 16px; bottom: 16px; width: 52px; height: 52px; background: #e11d48; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(225,29,72,0.6); cursor: pointer; transition: transform 0.2s; }
         .play-btn-circle:hover { transform: scale(1.08); }
-        .play-btn-circle svg { width: 22px; height: 22px; fill: #fff; margin-right: -2px; }
+        .play-btn-circle svg { width: 24px; height: 24px; fill: #fff; margin-right: -2px; }
 
         .meta-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
         .meta-tag { background: rgba(225, 29, 72, 0.15); color: #f43f5e; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(225, 29, 72, 0.3); }
 
-        .seasons-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-top: 10px; }
-        .season-pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; white-space: nowrap; color: #9ca3af; }
-        .season-pill.active { background: #e11d48; border-color: #e11d48; color: #fff; font-weight: 700; }
-
-        .episodes-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; max-height: 200px; overflow-y: auto; }
-        .episode-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 14px; border-radius: 10px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .episode-item:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
-
-        /* Video Player Modal Overlay */
+        /* Video Player Modal */
         #video-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 16px; }
         #video-modal.active { display: flex; }
-        .video-container { width: 100%; max-width: 800px; background: #000; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
-        video { width: 100%; height: auto; max-height: 70vh; display: block; outline: none; }
+        .video-container { width: 100%; max-width: 850px; background: #000; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.2); }
+        video { width: 100%; height: auto; max-height: 75vh; display: block; outline: none; }
         .close-video-btn { position: absolute; top: 16px; left: 16px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; z-index: 1010; font-size: 13px; }
-        .close-video-btn:hover { background: #e11d48; border-color: #e11d48; }
+        .close-video-btn:hover { background: #e11d48; }
+        .loading-text { text-align: center; color: #9ca3af; font-size: 14px; padding: 30px; grid-column: span 2; }
+
+        /* Admin Password Modal */
+        #admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 16px; }
+        #admin-modal.active { display: flex; }
+        .admin-modal-card { background: rgba(18, 18, 24, 0.95); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+        .admin-modal-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+        .admin-modal-sub { font-size: 12px; color: #9ca3af; margin-bottom: 16px; }
+        .admin-pass-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px; color: #fff; font-size: 14px; text-align: center; outline: none; margin-bottom: 12px; }
+        .admin-pass-input:focus { border-color: #e11d48; box-shadow: 0 0 12px rgba(225,29,72,0.3); }
+        .btn-modal-red { width: 100%; padding: 12px; background: linear-gradient(135deg, #e11d48, #be123c); border: none; border-radius: 12px; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; }
+        .btn-modal-cancel { width: 100%; padding: 10px; background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #9ca3af; font-size: 13px; cursor: pointer; margin-top: 8px; }
     </style>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -101,45 +102,56 @@
     <div class="glow-1"></div>
     <div class="glow-2"></div>
 
-    <!-- Real Video Player Modal -->
+    <!-- Video Modal -->
     <div id="video-modal">
         <button class="close-video-btn" onclick="closeVideoPlayer()">✕ סגור נגן</button>
         <div class="video-container">
             <video id="main-video-player" controls>
                 <source id="video-source" src="" type="video/mp4">
-                הדפדפן שלך אינו תומך בנגן וידאו.
             </video>
         </div>
     </div>
 
+    <!-- Admin Password Prompt Modal -->
+    <div id="admin-modal">
+        <div class="admin-modal-card">
+            <div class="admin-modal-title">⚙️ גישת מנהל מערכת</div>
+            <div class="admin-modal-sub">הזן סיסמת מנהל כדי להכנס לפאנל הניהול</div>
+            <input type="password" id="admin-pass-input" class="admin-pass-input" placeholder="הזן סיסמה..." onkeyup="if(event.key==='Enter') verifyAdminPass()">
+            <div id="admin-pass-error" style="color:#f43f5e; font-size:11px; margin-bottom:10px; display:none;">סיסמה שגויה, נסה שוב.</div>
+            <button class="btn-modal-red" onclick="verifyAdminPass()">כניסה לניהול</button>
+            <button class="btn-modal-cancel" onclick="closeAdminModal()">ביטול</button>
+        </div>
+    </div>
+
     <main>
-        <!-- Top App Header -->
         <header class="app-header">
             <div class="brand-title">Movie Time</div>
-            <div class="custom-logo" title="Movie Time Logo" onclick="logoutUser()">
-                <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM4 18V8h16v10H4z"/></svg>
+            <div class="header-actions">
+                <button class="btn-icon-secondary" onclick="openAdminModal()">⚙️ ניהול</button>
+                <div class="custom-logo" title="התנתקות" onclick="logoutUser()">
+                    <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM4 18V8h16v10H4z"/></svg>
+                </div>
             </div>
         </header>
 
-        <!-- Navigation Tabs -->
         <nav class="nav-tabs">
             <button class="nav-tab active" onclick="switchTab('movies')">סרטים</button>
-            <button class="nav-tab" onclick="switchTab('series')">סדרות</button>
             <button class="nav-tab" onclick="switchTab('search')">חיפוש</button>
         </nav>
 
-        <!-- ================= PAGE 1: MOVIES ================= -->
         <section id="tab-movies" class="view-section active">
             <div id="movies-list-container">
                 <div class="filters-bar">
                     <select id="movie-cat-filter" class="custom-select" onchange="filterAndSortMovies()">
                         <option value="all">כל הקטגוריות</option>
-                        <option value="קומדיה">קומדיה</option>
                         <option value="פעולה">פעולה</option>
+                        <option value="קומדיה">קומדיה</option>
                         <option value="פשע">פשע</option>
                         <option value="דוקומנטרי">דוקומנטרי</option>
                         <option value="אימה">אימה</option>
                         <option value="אנימציה">אנימציה</option>
+                        <option value="מדע בדיוני">מדע בדיוני</option>
                     </select>
 
                     <select id="movie-sort-filter" class="custom-select" onchange="filterAndSortMovies()">
@@ -149,7 +161,9 @@
                     </select>
                 </div>
 
-                <div id="movies-grid" class="media-grid"></div>
+                <div id="movies-grid" class="media-grid">
+                    <div class="loading-text">טוען סרטים מ-Firebase...</div>
+                </div>
             </div>
 
             <div id="movie-detail-view" class="detail-view">
@@ -157,8 +171,7 @@
                     <svg style="width:14px;height:14px;fill:currentColor;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                     חזור
                 </button>
-                <div class="detail-banner">
-                    <span id="detail-movie-icon">🎬</span>
+                <div id="detail-movie-banner" class="detail-banner">
                     <div class="play-btn-circle" onclick="playCurrentMovie()">
                         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
@@ -175,44 +188,9 @@
             </div>
         </section>
 
-        <!-- ================= PAGE 2: SERIES ================= -->
-        <section id="tab-series" class="view-section">
-            <div id="series-list-container">
-                <div id="series-grid" class="media-grid"></div>
-            </div>
-
-            <div id="series-detail-view" class="detail-view">
-                <button class="back-btn" onclick="closeSeriesDetail()">
-                    <svg style="width:14px;height:14px;fill:currentColor;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-                    חזור
-                </button>
-                <div class="detail-banner">
-                    <span id="detail-series-icon">📺</span>
-                    <div class="play-btn-circle" onclick="playFirstEpisode()">
-                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </div>
-                </div>
-                <div>
-                    <h2 id="detail-series-title" style="font-size:20px; font-weight:800; color:#fff;"></h2>
-                    <div class="meta-tags">
-                        <span id="detail-series-year" class="meta-tag"></span>
-                        <span id="detail-series-cat" class="meta-tag"></span>
-                    </div>
-                    <p id="detail-series-desc" style="font-size:13px; color:#9ca3af; line-height:1.6; margin-top:10px;"></p>
-                    
-                    <h4 style="font-size:14px; font-weight:700; color:#fff; margin-top:16px;">עונות:</h4>
-                    <div id="seasons-pills-container" class="seasons-container"></div>
-
-                    <h4 style="font-size:14px; font-weight:700; color:#fff; margin-top:14px;">פרקים בעונה הנבחרת:</h4>
-                    <div id="episodes-list-container" class="episodes-list"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= PAGE 3: SEARCH ================= -->
         <section id="tab-search" class="view-section">
             <div class="search-box">
-                <input type="text" id="search-input-field" class="search-input" placeholder="חפש סרטים, סדרות, קטגוריות..." oninput="handleSearchInput()">
+                <input type="text" id="search-input-field" class="search-input" placeholder="חפש סרטים, קטגוריות..." oninput="handleSearchInput()">
                 <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             </div>
             <div id="search-results-grid" class="media-grid"></div>
@@ -232,54 +210,55 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        let authChecked = false;
+        const ADMIN_PASSWORD = "1234"; // ה סיסמה המוגדרת למנהל
+
+        let moviesList = [];
+        let selectedMovie = null;
+
+        // Auth Check
         auth.onAuthStateChanged((user) => {
-            if (!user && !authChecked) {
-                // המתן שנייה קצרה לוודא שפיירבייס טוען סשן קיים לפני החזרה ל-index
+            if (!user) {
                 setTimeout(() => {
-                    if (!auth.currentUser) {
-                        window.location.href = 'index.html';
-                    }
+                    if (!auth.currentUser) window.location.href = 'index.html';
                 }, 1000);
             }
-            authChecked = true;
         });
 
-        // סרטים כולל קישורי וידאו אמיתיים ויציבים לסטרימינג
-        const moviesData = [
-            { id: 1, title: 'בין כוכבים', year: 2014, category: 'מדע בדיוני', views: 15400, desc: 'מסע בין כוכבים מעבר לגלקסיה כדי להציל את האנושות.', icon: '🌌', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' },
-            { id: 2, title: 'מהיר ועצבני 9', year: 2021, category: 'פעולה', views: 24500, desc: 'חבורת מרוצי הרחוב חוזרת למשימת אקשן מטורפת בקנה מידה עולמי.', icon: '🏎️', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
-            { id: 3, title: 'האביר האפל', year: 2008, category: 'פשע', views: 31200, desc: 'באטמן נלחם בג’וקר שמנסה לזרוע אנרכיה בעיר גות’הם.', icon: '🦇', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' },
-            { id: 4, title: 'צחוק הגורל', year: 2022, category: 'קומדיה', views: 8900, desc: 'קומדיה רומנטית פרועה על זוג שמנסה להתחתן נגד כל הסיכויים.', icon: '😂', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4' },
-            { id: 5, title: 'המעמקים החשוכים', year: 2023, category: 'אימה', views: 12100, desc: 'צוללנים מגלים יצור קדום ומפלצתי במעמקי האוקיינוס.', icon: '😱', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4' },
-            { id: 6, title: 'כדור הארץ הפראי', year: 2021, category: 'דוקומנטרי', views: 6700, desc: 'סדרה דוקומנטרית עוצרת נשימה על הטבע והחיות הנדירות בעולם.', icon: '🦁', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
-            { id: 7, title: 'הרפתקאות הגיבור', year: 2023, category: 'אנימציה', views: 18900, desc: 'נער צעיר יוצא למסע קסום כדי להציל את הממלכה שלו.', icon: '🪄', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4' }
-        ];
+        // Admin Modal Controls
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.add('active');
+            document.getElementById('admin-pass-input').value = '';
+            document.getElementById('admin-pass-error').style.display = 'none';
+            document.getElementById('admin-pass-input').focus();
+        }
 
-        const seriesData = [
-            { 
-                id: 101, title: 'שובר שורות', year: 2008, category: 'פשע', icon: '⚗️', desc: 'מורה לכימיה חולה במחלה קשה הופך לברון סמים.',
-                seasons: {
-                    'עונה 1': [
-                        { name: 'פרק 1: התחלה חדשה', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' },
-                        { name: 'פרק 2: חתול ועכבר', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
-                        { name: 'פרק 3: תוצאות ועסקים', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' }
-                    ]
-                }
-            },
-            { 
-                id: 102, title: 'דברים מוזרים', year: 2016, category: 'אימה', icon: '🚲', desc: 'חבורת ילדים נתקלת בתופעות על-טבעיות בעיירה קטנה.',
-                seasons: {
-                    'עונה 1': [
-                        { name: 'פרק 1: היעלמותו של וויל', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4' },
-                        { name: 'פרק 2: הילדה המוזרה', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' }
-                    ]
-                }
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.remove('active');
+        }
+
+        function verifyAdminPass() {
+            const inputVal = document.getElementById('admin-pass-input').value.trim();
+            if (inputVal === ADMIN_PASSWORD) {
+                window.location.href = 'admin.html';
+            } else {
+                document.getElementById('admin-pass-error').style.display = 'block';
             }
-        ];
+        }
 
-        let selectedMovieId = null;
+        // Live Firestore Movies Fetch
+        function fetchMoviesFromFirestore() {
+            db.collection("movies").onSnapshot((snapshot) => {
+                moviesList = [];
+                snapshot.forEach((doc) => {
+                    moviesList.push({ id: doc.id, ...doc.data() });
+                });
+                filterAndSortMovies();
+            }, (error) => {
+                console.error("Error fetching movies:", error);
+            });
+        }
 
         function switchTab(tabName) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -289,24 +268,25 @@
                 document.querySelectorAll('.nav-tab')[0].classList.add('active');
                 document.getElementById('tab-movies').classList.add('active');
                 closeMovieDetail();
-            } else if (tabName === 'series') {
-                document.querySelectorAll('.nav-tab')[1].classList.add('active');
-                document.getElementById('tab-series').classList.add('active');
-                closeSeriesDetail();
             } else if (tabName === 'search') {
-                document.querySelectorAll('.nav-tab')[2].classList.add('active');
+                document.querySelectorAll('.nav-tab')[1].classList.add('active');
                 document.getElementById('tab-search').classList.add('active');
             }
         }
 
-        // Movies Logic
         function renderMovies(list) {
             const grid = document.getElementById('movies-grid');
             grid.innerHTML = '';
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="loading-text">עדיין לא הועלו סרטים. לחץ על ⚙️ ניהול והזן סיסמה כדי להעלות!</div>`;
+                return;
+            }
+
             list.forEach(m => {
                 grid.innerHTML += `
-                    <div class="media-card" onclick="openMovieDetail(${m.id})">
-                        <div class="media-thumb">${m.icon}</div>
+                    <div class="media-card" onclick="openMovieDetail('${m.id}')">
+                        <div class="media-poster" style="background-image: url('${m.posterUrl}');"></div>
                         <div class="media-info">
                             <div class="media-title">${m.title}</div>
                             <div class="media-desc">${m.desc}</div>
@@ -320,20 +300,20 @@
             const cat = document.getElementById('movie-cat-filter').value;
             const sort = document.getElementById('movie-sort-filter').value;
 
-            let result = [...moviesData];
+            let result = [...moviesList];
             if (cat !== 'all') result = result.filter(m => m.category === cat);
-            if (sort === 'newest') result.sort((a,b) => b.year - a.year);
-            if (sort === 'oldest') result.sort((a,b) => a.year - b.year);
-            if (sort === 'popular') result.sort((a,b) => b.views - a.views);
+            if (sort === 'newest') result.sort((a,b) => (b.year || 0) - (a.year || 0));
+            if (sort === 'oldest') result.sort((a,b) => (a.year || 0) - (b.year || 0));
+            if (sort === 'popular') result.sort((a,b) => (b.views || 0) - (a.views || 0));
 
             renderMovies(result);
         }
 
         function openMovieDetail(id) {
-            const m = moviesData.find(item => item.id === id);
+            const m = moviesList.find(item => item.id === id);
             if (!m) return;
-            selectedMovieId = m.id;
-            document.getElementById('detail-movie-icon').innerText = m.icon;
+            selectedMovie = m;
+            document.getElementById('detail-movie-banner').style.backgroundImage = `url('${m.posterUrl}')`;
             document.getElementById('detail-movie-title').innerText = m.title;
             document.getElementById('detail-movie-year').innerText = 'שנה: ' + m.year;
             document.getElementById('detail-movie-cat').innerText = 'קטגוריה: ' + m.category;
@@ -349,89 +329,11 @@
         }
 
         function playCurrentMovie() {
-            const m = moviesData.find(item => item.id === selectedMovieId);
-            if (m && m.videoUrl) {
-                openVideoPlayer(m.videoUrl);
+            if (selectedMovie && selectedMovie.videoUrl) {
+                openVideoPlayer(selectedMovie.videoUrl);
             }
         }
 
-        // Series Logic
-        function renderSeries() {
-            const grid = document.getElementById('series-grid');
-            grid.innerHTML = '';
-            seriesData.forEach(s => {
-                grid.innerHTML += `
-                    <div class="media-card" onclick="openSeriesDetail(${s.id})">
-                        <div class="media-thumb">${s.icon}</div>
-                        <div class="media-info">
-                            <div class="media-title">${s.title}</div>
-                            <div class="media-desc">${s.desc}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        let currentSeriesEpisodes = [];
-        function openSeriesDetail(id) {
-            const s = seriesData.find(item => item.id === id);
-            if (!s) return;
-            document.getElementById('detail-series-icon').innerText = s.icon;
-            document.getElementById('detail-series-title').innerText = s.title;
-            document.getElementById('detail-series-year').innerText = 'שנה: ' + s.year;
-            document.getElementById('detail-series-cat').innerText = 'קטגוריה: ' + s.category;
-            document.getElementById('detail-series-desc').innerText = s.desc;
-
-            const seasonsContainer = document.getElementById('seasons-pills-container');
-            seasonsContainer.innerHTML = '';
-            const seasonKeys = Object.keys(s.seasons);
-            seasonKeys.forEach((seasonName, idx) => {
-                seasonsContainer.innerHTML += `<div class="season-pill ${idx === 0 ? 'active' : ''}" onclick="selectSeason(${s.id}, '${seasonName}', this)">${seasonName}</div>`;
-            });
-
-            if(seasonKeys.length > 0) {
-                renderEpisodes(s.seasons[seasonKeys[0]]);
-            }
-
-            document.getElementById('series-list-container').style.display = 'none';
-            document.getElementById('series-detail-view').classList.add('active');
-        }
-
-        function selectSeason(seriesId, seasonName, el) {
-            document.querySelectorAll('.season-pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            const s = seriesData.find(item => item.id === seriesId);
-            if(s && s.seasons[seasonName]) {
-                renderEpisodes(s.seasons[seasonName]);
-            }
-        }
-
-        function renderEpisodes(episodesArray) {
-            currentSeriesEpisodes = episodesArray;
-            const epContainer = document.getElementById('episodes-list-container');
-            epContainer.innerHTML = '';
-            episodesArray.forEach(ep => {
-                epContainer.innerHTML += `
-                    <div class="episode-item" onclick="openVideoPlayer('${ep.url}')">
-                        <span>${ep.name}</span>
-                        <span style="color:#e11d48; font-weight:700;">▶ צפה</span>
-                    </div>
-                `;
-            });
-        }
-
-        function playFirstEpisode() {
-            if (currentSeriesEpisodes.length > 0) {
-                openVideoPlayer(currentSeriesEpisodes[0].url);
-            }
-        }
-
-        function closeSeriesDetail() {
-            document.getElementById('series-detail-view').classList.remove('active');
-            document.getElementById('series-list-container').style.display = 'block';
-        }
-
-        // Video Player Modal Management
         function openVideoPlayer(url) {
             const modal = document.getElementById('video-modal');
             const video = document.getElementById('main-video-player');
@@ -450,7 +352,6 @@
             modal.classList.remove('active');
         }
 
-        // Search Logic
         function handleSearchInput() {
             const query = document.getElementById('search-input-field').value.toLowerCase().trim();
             const grid = document.getElementById('search-results-grid');
@@ -458,21 +359,17 @@
 
             if(!query) return;
 
-            const matchedMovies = moviesData.filter(m => m.title.toLowerCase().includes(query) || m.category.toLowerCase().includes(query));
-            const matchedSeries = seriesData.filter(s => s.title.toLowerCase().includes(query) || s.category.toLowerCase().includes(query));
-            const combined = [...matchedMovies, ...matchedSeries];
+            const matched = moviesList.filter(m => m.title.toLowerCase().includes(query) || m.category.toLowerCase().includes(query));
 
-            if(combined.length === 0) {
+            if(matched.length === 0) {
                 grid.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#9ca3af; padding: 20px;">לא נמצאו תוצאות עבור "${query}"</div>`;
                 return;
             }
 
-            combined.forEach(item => {
-                const isMovie = moviesData.some(m => m.id === item.id);
-                const clickAction = isMovie ? `openMovieDetail(${item.id}); switchTab('movies');` : `openSeriesDetail(${item.id}); switchTab('series');`;
+            matched.forEach(item => {
                 grid.innerHTML += `
-                    <div class="media-card" onclick="${clickAction}">
-                        <div class="media-thumb">${item.icon}</div>
+                    <div class="media-card" onclick="openMovieDetail('${item.id}'); switchTab('movies');">
+                        <div class="media-poster" style="background-image: url('${item.posterUrl}');"></div>
                         <div class="media-info">
                             <div class="media-title">${item.title}</div>
                             <div class="media-desc">${item.desc}</div>
@@ -515,8 +412,7 @@
         window.onload = () => { 
             initCanvas(); 
             animateCanvas(); 
-            renderMovies(moviesData);
-            renderSeries();
+            fetchMoviesFromFirestore();
         };
     </script>
 </body>
